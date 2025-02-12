@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import 'controle/controle_planeta.dart';
 import 'modelos/planeta.dart';
 import 'telas/tela_planetas.dart';
@@ -40,11 +39,11 @@ class _MyHomeState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    _lerPlanetas();
+    _atualizarPlanetas();
   }
 
-  Future<void> _lerPlanetas() async {
-    final resultado = await _controlePlaneta.lerPlanetas();
+  Future<void> _atualizarPlanetas() async {
+    final resultado = await _controlePlaneta.atualizarPlanetas();
     setState(() {
       _planetas = resultado;
     });
@@ -54,15 +53,16 @@ class _MyHomeState extends State<MyHomePage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => TelaPlaneta(onFinalizado: () {_lerPlanetas();},),
-       )
+        builder: (context) => TelaPlaneta(onFinalizado: () {
+          _atualizarPlanetas();
+        }),
+      ),
     );
   }
 
-
   void _excluirPlaneta(int id) async {
     await _controlePlaneta.excluirPlaneta(id);
-    //_lerPlanetas();
+    _atualizarPlanetas();
   }
 
   @override
@@ -79,9 +79,19 @@ class _MyHomeState extends State<MyHomePage> {
           return ListTile(
             title: Text(planeta.nome),
             subtitle: Text(planeta.distancia.toString()),
-            trailing: IconButton (icon: const Icon(Icons.delete),
-            onPressed: () => _excluirPlaneta(planeta.id!)
-            )
+            trailing: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.delete),
+                  onPressed: () => _excluirPlaneta(planeta.id!),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.edit),
+                  onPressed: () => {}, // _alterarPlaneta(planeta)
+                ),
+              ],
+            ),
           );
         },
       ),

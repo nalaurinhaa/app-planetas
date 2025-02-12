@@ -31,7 +31,7 @@ class ControlePlaneta {
     await db.execute(sql);
   }
 
-  Future<List<Planeta>> lerPlanetas() async {
+  Future<List<Planeta>> atualizarPlanetas() async {
     final db = await bd;
     final resultado = await db.query('planetas');
     return resultado.map((item) => Planeta.fromMap(item)).toList();
