@@ -3,7 +3,9 @@ import 'package:myapp/controle/controle_planeta.dart';
 import '../modelos/planeta.dart';
 
 class TelaPlaneta extends StatefulWidget {
-  const TelaPlaneta({super.key});
+  final Function() onFinalizado;
+
+  const TelaPlaneta({super.key, required this.onFinalizado});
 
   @override
   State<TelaPlaneta> createState() => _TelaPlanetaState();
@@ -38,11 +40,14 @@ class _TelaPlanetaState extends State<TelaPlaneta> {
     if (_formKey.currentState!.validate()) {
       // Dados validados com sucesso
       _formKey.currentState!.save();
+
       _inserirPlaneta();
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Dados do planeta salvos com sucesso!\n')),
       );
       Navigator.of(context).pop();
+      widget.onFinalizado;
     }
   }
 

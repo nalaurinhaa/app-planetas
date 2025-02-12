@@ -53,8 +53,16 @@ class _MyHomeState extends State<MyHomePage> {
   void _incluirPlaneta(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const TelaPlaneta()),
+      MaterialPageRoute(
+        builder: (context) => TelaPlaneta(onFinalizado: () {_lerPlanetas();},),
+       )
     );
+  }
+
+
+  void _excluirPlaneta(int id) async {
+    await _controlePlaneta.excluirPlaneta(id);
+    //_lerPlanetas();
   }
 
   @override
@@ -71,6 +79,9 @@ class _MyHomeState extends State<MyHomePage> {
           return ListTile(
             title: Text(planeta.nome),
             subtitle: Text(planeta.distancia.toString()),
+            trailing: IconButton (icon: const Icon(Icons.delete),
+            onPressed: () => _excluirPlaneta(planeta.id!)
+            )
           );
         },
       ),

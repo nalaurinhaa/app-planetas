@@ -31,15 +31,21 @@ class ControlePlaneta {
     await db.execute(sql);
   }
 
-Future<List<Planeta>> lerPlanetas() async {
-  final db = await bd;
-  final resultado = await db.query('planetas');
-  return resultado.map((item) => Planeta.fromMap(item)).toList();
-}
+  Future<List<Planeta>> lerPlanetas() async {
+    final db = await bd;
+    final resultado = await db.query('planetas');
+    return resultado.map((item) => Planeta.fromMap(item)).toList();
+  }
 
-Future<int> inserirPlaneta(Planeta planeta) async {
-  final db = await bd;
-  return await db.insert('planetas', planeta.toMap());
-}
+  Future<int> inserirPlaneta(Planeta planeta) async {
+    final db = await bd;
+    return await db.insert('planetas', planeta.toMap());
+  }
+
+  Future<int> excluirPlaneta(int id) async {
+    final db = await bd;
+    return await db.delete('planetas', where: 'id = ?', whereArgs: [id]);
+  }
+
 
 }
