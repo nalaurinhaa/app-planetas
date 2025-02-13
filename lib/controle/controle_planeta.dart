@@ -41,6 +41,17 @@ class ControlePlaneta {
     final db = await bd;
     return await db.insert('planetas', planeta.toMap());
   }
+  
+  Future<int> alterarPlaneta(Planeta planeta) async {
+    final db = await bd;
+    return db.update(
+      'planetas',
+       planeta.toMap(), 
+       where: 'id = ?', 
+       whereArgs: [planeta.id]);
+  }
+
+
 
   Future<int> excluirPlaneta(int id) async {
     final db = await bd;

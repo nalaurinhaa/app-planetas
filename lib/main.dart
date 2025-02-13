@@ -15,9 +15,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Planetas',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 58, 85, 183)),
         useMaterial3: true,
       ),
+      debugShowCheckedModeBanner: false, // Desativa o banner de depuração
       home: const MyHomePage(title: 'App - Planetas'),
     );
   }
@@ -53,9 +54,28 @@ class _MyHomeState extends State<MyHomePage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => TelaPlaneta(onFinalizado: () {
-          _atualizarPlanetas();
-        }),
+        builder: (context) => TelaPlaneta(
+          isIncluir: true,
+          planeta: Planeta.vazio(),
+          onFinalizado: () {
+            _atualizarPlanetas();
+          },
+        ),
+      ),
+    );
+  }
+
+  void _alterarPlaneta(BuildContext context, Planeta planeta) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => TelaPlaneta(
+          isIncluir: false,
+          planeta: planeta,
+          onFinalizado: () {
+            _atualizarPlanetas();
+          },
+        ),
       ),
     );
   }
@@ -78,7 +98,7 @@ class _MyHomeState extends State<MyHomePage> {
           final planeta = _planetas[index];
           return ListTile(
             title: Text(planeta.nome),
-            subtitle: Text(planeta.distancia.toString()),
+            subtitle: Text(planeta.apelido!),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -88,7 +108,7 @@ class _MyHomeState extends State<MyHomePage> {
                 ),
                 IconButton(
                   icon: const Icon(Icons.edit),
-                  onPressed: () => {}, // _alterarPlaneta(planeta)
+                  onPressed: () => _alterarPlaneta(context, planeta),
                 ),
               ],
             ),
@@ -104,4 +124,3 @@ class _MyHomeState extends State<MyHomePage> {
     );
   }
 }
-

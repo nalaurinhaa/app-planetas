@@ -3,9 +3,16 @@ import 'package:myapp/controle/controle_planeta.dart';
 import '../modelos/planeta.dart';
 
 class TelaPlaneta extends StatefulWidget {
+  final bool isIncluir;
+  final Planeta planeta;
   final Function() onFinalizado;
 
-  const TelaPlaneta({super.key, required this.onFinalizado});
+  const TelaPlaneta({
+    required this.isIncluir,
+    super.key,
+    required this.planeta,
+    required this.onFinalizado,
+  });
 
   @override
   State<TelaPlaneta> createState() => _TelaPlanetaState();
@@ -21,7 +28,17 @@ class _TelaPlanetaState extends State<TelaPlaneta> {
 
   final ControlePlaneta _controlePlaneta = ControlePlaneta();
 
-  final Planeta _planeta = Planeta.vazio();
+  late Planeta _planeta;
+
+  @override
+  void initState() {
+    _planeta = widget.planeta;
+    _nameController.text = _planeta.nome;
+    _tamanhoController.text = _planeta.tamanho.toString();
+    _distanciaController.text = _planeta.distancia.toString();
+    _apelidoController.text = _planeta.apelido ?? '';
+    super.initState();
+  }
 
   @override
   void dispose() {
@@ -36,12 +53,25 @@ class _TelaPlanetaState extends State<TelaPlaneta> {
     await _controlePlaneta.inserirPlaneta(_planeta);
   }
 
+  Future<void> _alterarPlaneta() async {
+    await _controlePlaneta.alterarPlaneta(_planeta);
+  }
+
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
       // Dados validados com sucesso
       _formKey.currentState!.save();
 
-      _inserirPlaneta();
+
+
+
+      if (widget.isIncluir) {
+        _inserirPlaneta();
+      } else {
+        _alterarPlaneta();
+      }
+
+
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Dados do planeta salvos com sucesso!\n')),
@@ -147,10 +177,16 @@ class _TelaPlanetaState extends State<TelaPlaneta> {
                   },
                 ),
                 const SizedBox(height: 16.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [ ElevatedButton(
+                  onPressed: () =>  Navigator.of(context).pop(),
+                  child: const Text('Cancelar'),
+                ),
                 ElevatedButton(
                   onPressed: _submitForm,
-                  child: const Text('Salvar'),
-                ),
+                  child: const Text('Confirmar'),
+                ),],)
               ],
             ),
           ),
